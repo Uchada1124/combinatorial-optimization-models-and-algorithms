@@ -1,0 +1,154 @@
+本節では, 二部グラフの最小コスト完全マッチング問題の組合せ的なアルゴリズムについてまとめる.
+$|U| \neq |V|$ の場合は, 完全マッチングが存在しないので、$|U| = |V|$ と仮定する. 
+また, 本節では以下の2つの仮定を置く.
+\begin{enumerate}
+    \item 二部グラフ$G$ は完全マッチングを持つ.
+    \item 各辺 $e \in E$ のコスト$c_e$ は非負である.
+\end{enumerate}
+
+これらの仮定を満たさない場合は, $G' = (U, V; E'), c'_e$ を以下のようにする.
+
+負のコストの辺があるとき, 
+
+$$\Delta = \left| \min_{e \in E} c_e \right|,\quad \forall e \in E,\quad c'_e = c_e + \Delta$$
+
+負のコストの辺がないとき, 
+
+$$\forall e \in E,\quad c'_e = c_e$$
+
+$G$ が完全マッチングをもたないとき, 
+
+完全マッチングをもつように辺 $e'$ を加える．
+
+$$\Theta =|U| \max_{e \in E} c'_e + 1,\quad c'_{e'} = \Theta$$
+
+\begin{lemma}
+    コスト $c'_e$ をもつ二部グラフ $G'$ における最小コストの完全マッチング $M'$ とする. 
+    $M'$ のコストが $\Theta$ 以上ならば，$G$ は完全マッチングをもたない．  
+    $M'$ のコストが $\Theta$ 未満ならば，$M'$ は $G$ の最小コスト完全マッチングである．
+\end{lemma}
+
+\begin{proof}
+    $M'$ のコスト $\ge \Theta$ のとき, 
+    $e'$ をつかっているので, 元のグラフ $G$ は完全マッチングをもたない. 
+
+    $M'$ のコスト $< \Theta$ のとき, 
+    $e'$ をつかっていないので, $M'$ は $G$ の完全マッチングである. 
+    
+    $G$ の負のコストの辺を持たない任意の完全マッチング $M$ について，
+    $$
+    \sum_{e \in M} c'_e
+    =
+    \sum_{e \in M} c_e
+    $$
+    である. 
+    
+    $G$ の負のコストの辺を持つ任意の完全マッチング $M$ について，
+    $$
+    \sum_{e \in M} c'_e
+    =
+    \sum_{e \in M} (c_e + \Delta)
+    =
+    \sum_{e \in M} c_e + |U| \Delta
+    $$
+    である.
+
+    $|U| \Delta$ は定数なので, 
+    $G$ の最小コスト完全マッチングであることと $G'$ の最小コスト完全マッチングであることは同値である. 
+\end{proof}
+
+問題\eqref{relaxation} の双対問題は以下のように定式化できる.
+
+\begin{equation}
+\begin{aligned}
+\text{maximize} \quad & \sum_{u \in U} y_u + \sum_{v \in V} y_v \\
+\text{subject to} \quad 
+& y_u + y_v \le c_e \quad (e = uv \in E), \\
+\end{aligned}
+\label{relaxation_dual}
+\end{equation}
+
+問題\eqref{relaxation}をラグランジュ緩和することで確認する. 
+各等式制約に対してラグランジュ乗数を導入する：
+
+$$
+y_u \in \mathbb{R} \quad (u\in U), 
+\qquad
+y_v \in \mathbb{R} \quad (v\in V).
+$$
+
+ラグランジアンは
+
+\begin{equation}
+\begin{aligned}
+\mathcal{L}(x,y)
+&=
+\sum_{e\in E} c_e x_e
++ \sum_{u\in U} y_u
+\left(1-\sum_{e\in\delta(u)}x_e\right)
++ \sum_{v\in V} y_v
+\left(1-\sum_{e\in\delta(v)}x_e\right).
+\end{aligned}
+\end{equation}
+
+整理すると
+
+\begin{equation}
+\begin{aligned}
+\mathcal{L}(x,y)
+&=
+\sum_{u\in U} y_u
++ \sum_{v\in V} y_v
++ \sum_{e=uv\in E}
+\bigl(c_e - y_u - y_v\bigr)x_e.
+\end{aligned}
+\end{equation}
+
+目的関数は
+
+$$
+g(y)=\inf_{x\ge 0} \mathcal{L}(x,y).
+$$
+
+ここで
+
+$$
+\mathcal{L}(x,y)
+=
+\underbrace{\sum_{u\in U} y_u + \sum_{v\in V} y_v}_{\text{定数}}
++ \sum_{e\in E} \alpha_e x_e,
+\qquad
+\alpha_e := c_e - y_u - y_v.
+$$
+
+各 $e$ について
+
+$$
+\inf_{x_e \ge 0} \alpha_e x_e
+=
+\begin{cases}
+0 & (\alpha_e \ge 0),\\
+-\infty & (\alpha_e < 0).
+\end{cases}
+$$
+
+したがって $g(y)$ が有限となるための必要十分条件は
+
+$$
+c_e - y_u - y_v \ge 0
+\quad \Longleftrightarrow \quad
+y_u + y_v \le c_e
+\quad (e=uv\in E).
+$$
+
+このとき
+
+$$
+g(y)
+=
+\sum_{u\in U} y_u
++
+\sum_{v\in V} y_v.
+$$
+
+よって双対問題は問題\eqref{relaxation_dual} である. 

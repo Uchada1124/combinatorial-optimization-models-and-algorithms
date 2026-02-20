@@ -1,0 +1,94 @@
+\begin{itemize}
+    \item $G = (U, V, E)$ : 二部グラフ
+    \item $c_e \in \R$ : $G$ の各辺 $e \in E$ に対するコスト
+\end{itemize}
+
+\begin{definition}[マッチング]
+    辺集合 $M \subseteq E$ がマッチングであるとは, 互いに端点を共有しない辺の集合であることをいう.
+\end{definition}
+
+\begin{definition}[被覆されている]
+    頂点 $v \in V$ がマッチング $M \subseteq E$ に被覆されているとは, 
+    頂点 $v$ に $M$ の辺が接続されていることをいう.
+\end{definition}
+
+\begin{definition}[完全マッチング]
+    マッチング $M$ が完全マッチングであるとは, すべての頂点が $M$ に被覆されていることをいう.
+\end{definition}
+
+\begin{definition}[最小コスト完全マッチング問題]
+    最小コスト完全マッチング問題とは, 
+    二部グラフ $G$ の完全マッチングの中でコスト総和 $\sum_{e \in M} c_e$ が最小のものを求める問題である.
+    $G$ に完全マッチングが存在しない場合は, $+\infty$ と答えることにする.
+\end{definition}
+
+\begin{definition}[特性ベクトル]
+    辺集合 $F \subseteq E$ の特性ベクトル $\chi_F \in \R^E$ とは, 
+    第 $e$ 成分が 以下のようなベクトルである.
+    $$
+        (\chi_F)_e = \begin{cases}
+            1 & (e \in F), \\
+            0 & (e \not\in F)
+        \end{cases}
+    $$
+\end{definition}
+
+図\ref{fig:example_of_minmatching}の辺コスト以下のように定義すると, 
+$G$ の完全マッチングの中でコスト総和が最小のものは $\{e_2, e_3, e_6\}$ であり, そのコスト総和は $c_{e_2} + c_{e_3} + c_{e_6} = -1 - 1 + 1 = -1$ である.
+
+$$
+    c_e = \begin{cases}
+        1 & (e = {e_1, e_4, e_6}) \\
+        -1 & (e = {e_2, e_3, e_5})
+    \end{cases}
+$$
+図\ref{fig:example_of_minmatching}においてマッチング $M = \{e_2, e_3, e_6\}$ 
+の特性ベクトルは $\chi_M = (0, 1, 1, 0, 0, 1)^T$ である.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.5\textwidth]{figures/example_of_min_matching.png}
+    \caption{二部グラフ, 完全マッチングの例.}
+    \label{fig:example_of_minmatching}
+\end{figure}
+
+\begin{definition}[超平面]
+    $\R^n$ の部分集合 $\mathcal{H}$ が超平面であるとは, ある非ゼロベクトル $a \in \R^n$ と実数 $\beta \in \R$ が存在して,
+    $$
+         \mathcal{H} = \{x \in \R^n \mid a^T x = \beta\}
+    $$
+    となることをいう.
+\end{definition}
+
+\begin{definition}[半空間]
+    $\R^n$ の部分集合 $\mathcal{H}$ が半空間であるとは, ある非ゼロベクトル $a \in \R^n$ と実数 $\beta \in \R$ が存在して,
+    $$
+         \mathcal{H} = \{x \in \R^n \mid a^T x \leq \beta\}
+    $$
+    となることをいう.
+\end{definition}
+
+\begin{definition}[多面体]
+    $\R^n$ の部分集合 $\mathcal{P}$ が多面体であるとは, ある有限個の半空間が存在して, 
+    それらの共通部分である. 
+    つまり, 以下のように書けるものをいう. 
+    $$
+        \mathcal{P} = \{x \in \R^n \mid a_i^T x \leq \beta_i (i = 1, \dots, m)\}
+    $$
+\end{definition}
+
+\begin{definition}[凸結合]
+    $n$ 次元ベクトル $x \in \R^n$ が $N$ 個の$n$ 次元ベクトル $x_1, \dots, x_N \in \R^n$ の凸結合であるとは, 
+    ある実数 $\lambda_1, \dots, \lambda_N \in \R$ が存在して, 以下を満たすことをいう.
+    $$
+        x = \sum_{i=1}^N \lambda_i x_i, \quad \sum_{i=1}^N \lambda_i = 1, \quad \lambda_i \geq 0 (i = 1, \dots, N)
+    $$
+\end{definition}
+
+\begin{definition}[凸包]
+    $N$ 個の$n$ 次元ベクトル $x_1, \dots, x_N \in \R^n$ の凸包とは, 
+    $x_1, \dots, x_N$ の凸結合全体の集合であり, $conv.hull(\{x_1, \dots, x_N\})$ のように表記する.
+\end{definition}
+
+凸包は有界な多面体であり, 任意の優かいな多面体は有限個のベクトルの凸包として表すことができる. 
+\cite[2.3節]{kakimura2024combinatorial}

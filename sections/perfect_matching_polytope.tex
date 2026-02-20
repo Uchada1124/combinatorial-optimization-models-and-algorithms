@@ -1,0 +1,168 @@
+\begin{definition}[完全マッチング多面体]
+    グラフ $G$ の完全マッチング多面体 $\mathcal{C}_{PM}$ とは, $G$ の完全マッチングの特性ベクトル全体の凸包のことをいう.
+\end{definition}
+
+最小コスト完全マッチング問題を整数最適化問題として定式化する.
+各辺 $e \in E$ に対して 0-1 変数 $x_e$ を用意して,
+$x_e = 1$ ならば辺 $e$ を完全マッチングに含め,$x_e = 0$ ならば含めないとする.
+辺集合 $M$ が完全マッチングであることは,各頂点 $v \in U \cup V$ に接続する辺のうち
+1 辺が $M$ に含まれることと等価である. 
+したがって,二部グラフの最小コスト完全マッチング問題は以下のように定式化できる. 
+
+\begin{equation*}
+\begin{aligned}
+\text{minimize} \quad & \sum_{e \in E} c_e x_e \\
+\text{subject to} \quad 
+& \sum_{e \in \delta(u)} x_e = 1 \quad (u \in U), \\
+& \sum_{e \in \delta(v)} x_e = 1 \quad (v \in V), \\
+& x_e \in \{0,1\} \quad (e \in E)
+\end{aligned}
+\end{equation*}
+
+ここで, 頂点 $u \in U \cup V$ に対して, $\delta(u)$ は頂点 $u$ に接続されている辺の集合である.
+上の整数最適化問題の制約 $x_e \in \{0,1\}$ を非負制約 $x_e \ge 0$ に置き換えた緩和問題は以下のように定式化できる.
+
+\begin{equation}
+\begin{aligned}
+\text{minimize} \quad & \sum_{e \in E} c_e x_e \\
+\text{subject to} \quad 
+& \sum_{e \in \delta(u)} x_e = 1 \quad (u \in U), \\
+& \sum_{e \in \delta(v)} x_e = 1 \quad (v \in V), \\
+& x_e \ge 0 \quad (e \in E)
+\end{aligned}
+\label{relaxation}
+\end{equation}
+
+各頂点 $v$ に対して $\sum_{e \in \delta(v)} x_e = 1$ かつ $x_e \ge 0$ より, 
+問題\eqref{relaxation} の実行可能解は, $x_e \le 1$ をみたす.
+問題\eqref{relaxation} の実行可能解を $\mathcal{K}(G)$ とする. 
+
+\begin{proposition}
+    任意の二部グラフ $G$ に対して, $\mathcal{C}_{PM} = \mathcal{K}(G)$ が成り立つ.
+\end{proposition}
+
+\begin{proof}
+    簡単のために, この証明では $\mathcal{C}_{PM} = \mathcal{C}$ と $\mathcal{K}(G) = \mathcal{K}$ とおく.
+    $\mathcal{C} \subseteq \mathcal{K}$ と $\mathcal{K} \subseteq \mathcal{C}$ を示す.
+
+    $\mathcal{C} \subseteq \mathcal{K}$ を示す.
+    $\mathcal{C}$ は完全マッチングの特性ベクトル全体の凸包であるので,
+    任意の点 $x \in \mathcal{C}$ は,ある $k$ 個の完全マッチング
+    $M_1, M_2, \dots, M_k$ と $\sum_{i=1}^k \lambda_i = 1$
+    を満たす非負実数 $\lambda_1, \lambda_2, \dots, \lambda_k \ge 0$ を用いて
+    $x = \sum_{i=1}^k \lambda_i \chi_{M_i}$ と表される.
+    $\chi_{M_i}$ は問題\eqref{relaxation} の制約をすべて満たすので,
+    $\chi_{M_i} \in \mathcal{K}$ が成り立つ.
+    凸集合 $\mathcal{K}$ に属するベクトルの凸結合は $\mathcal{K}$ に属するので,
+    このことから $x \in \mathcal{K}$ が成り立つことがいえる.
+    したがって,$\mathcal{C} \subseteq \mathcal{K}$ である.
+
+    $\mathcal{K} \subseteq \mathcal{C}$ を示す.
+    $\mathcal{K}$ の任意の頂点 $x^*$ が $\mathcal{C}$ に属することを示す.
+    この主張が成り立てば,$\mathcal{K}$ 内の任意のベクトル $x$ は$\mathcal{K}$ の頂点の凸結合として書けるので,
+    $x \in \mathcal{C}$ が成り立つ. 
+
+    $\mathcal{K}$ の頂点 $x^*$ の非ゼロ成分に対応する辺の集合を $E^* = \{ e \in E \mid x_e^* > 0 \}$ とおく. 
+    辺集合 $E^*$ をもつ $G$ の部分グラフを $G^* = (U, V; E^*)$ とおく. 
+    このとき,$G^*$ に対して,次の主張が成り立つ. 
+
+    \begin{claim}
+    $G^*$ はサイクルをもたない. 
+    \label{主張5.2}
+    \end{claim}
+
+    \begin{proof}
+    背理法で示す. $G^*$ にサイクル $C$ が存在すると仮定する. 
+    $G^*$ は二部グラフなので $C$ の長さ $\ell$ は偶数である. 
+    $C$ の辺集合をサイクルに沿って$e_1, e_2, \dots, e_\ell$とおく. 
+    また $C$ の頂点集合を $v_1, v_2, \dots, v_\ell$
+    として, $v_i$ には $e_i$ と $e_{i+1}$ が接続しているとする. 
+    ただし $e_{\ell+1}$ は $e_1$ を表すとする. 
+    ここで $\varepsilon = \min_{e \in C} x_e^* > 0$ とおくと,
+    任意の $e_i \in C$ に対して $x_{e_i}^* \ge \varepsilon$ である. 
+    さらに,問題\eqref{relaxation} の頂点 $v_i$ に対する制約から
+    $ x_{e_i}^* + x_{e_{i+1}}^* \le \sum_{e \in \delta(v_i)} x_e^* = 1$
+    が成り立つ. 
+
+    よって, 任意の $e_i \in C$ に対して $x_{e_i}^* \le 1 - x_{e_{i+1}}^* \le 1 - \varepsilon$ である. 
+    $x^*$ を用いて 2 つのベクトル $x^+, x^-$ を以下のように定義する. 
+
+    $$
+    x_e^+ =
+    \begin{cases}
+    x_{e_i}^* + (-1)^i \varepsilon & (e = e_i \in C), \\
+    x_e^* & (e \notin C),
+    \end{cases}
+    $$
+
+    $$
+    x_e^- =
+    \begin{cases}
+    x_{e_i}^* - (-1)^i \varepsilon & (e = e_i \in C), \\
+    x_e^* & (e \notin C).
+    \end{cases}
+    $$
+
+    このとき, $\varepsilon$ の定義より, 任意の辺 $e \in E$ に対して
+    $x_e^+ \ge 0$, $x_e^- \ge 0$ である. 
+    また, $\sum_{e\in\delta(v_i)} x_e^+$ を計算すると以下のようになる.
+
+    \begin{align*}
+    \sum_{e\in\delta(v_i)} x_e^+
+    &=
+    x_{e_i}^+ + x_{e_{i+1}}^+ \\
+    &=
+    \left(x_{e_i}^* + (-1)^i \varepsilon \right)
+    +
+    \left(x_{e_{i+1}}^* + (-1)^{i+1} \varepsilon \right) \\
+    &=
+    x_{e_i}^* + x_{e_{i+1}}^*
+    +
+    \left(
+    (-1)^i + (-1)^{i+1}
+    \right)\varepsilon \\
+    &= \sum_{e \in \delta(v)} x_e^*
+    \end{align*}
+
+    $\sum_{e \in \delta(v)} x_e^-$ も同様. 
+
+    $
+    \sum_{e \in \delta(v)} x_e^*
+    =
+    \sum_{e \in \delta(v)} x_e^+
+    =
+    \sum_{e \in \delta(v)} x_e^-
+    $
+
+    より, $x^+, x^- \in \mathcal{K}$ が成り立つ. 
+
+    このとき $x^* = \frac{1}{2} x^+ + \frac{1}{2} x^-$ が成り立つので, 
+    $x^*$ を 2 点 $x^+, x^-$ の凸結合として表せることになるが, これは命題\eqref{命題2.4} に矛盾する. 
+
+    \end{proof}
+    主張\ref{主張5.2} より, $G^*$ はサイクルをもたないので, $G^*$ は森をなす.
+
+    \begin{claim}
+        $E^*$ は $G$ の完全マッチングである. 
+        \label{主張5.3}
+    \end{claim}
+
+    \begin{proof}
+    $G^*$ のある連結成分 $H$ に着目する. 
+    問題 (5.3) の制約より, $G^*$ の各頂点の次数は 1 以上であるので, $H$ の頂点数は 2 以上である. 
+    $H$ は木であるので, 命題 3.1 より葉が存在する. 
+    葉 $v$ に接続する辺を $e'$ とし, $v$ ではないほうの $e'$ の端点を $u$ とおく. 
+    葉 $v$ の $G^*$ における次数は 1 であるので, 問題\eqref{relaxation} の
+    $v$ に対する制約より, $\sum_{e \in \delta(v)} x_e^* = x_{e'}^* = 1$ 
+    が成り立つ. 
+    一方, $u$ に対する制約を考えると, $x_{e'}^* \le \sum_{e \in \delta(u)} x_e^* = 1$ である. 
+    $x_{e'}^* = 1$ であるので, $u$ に接続する $E^*$ の辺は $e'$ のみであると分かる. 
+    よって, $H$ は辺 $e'$ のみからなる. 
+    $G^*$ の各連結成分について同様に考えると，
+    $G^*$ の各連結成分は 1 つの辺のみからなることが分かる. 
+    よって$E^*$ は完全マッチングであり，主張\eqref{主張5.3} が成り立つ. 
+    \end{proof}
+
+    主張\eqref{主張5.3} より，$x^*$ は完全マッチング $E^*$ の特性ベクトルであるので，$x^* \in C$ が成り立つ. 
+    したがって，定理 5.1 が示された. 
+\end{proof}
